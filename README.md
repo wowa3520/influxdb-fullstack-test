@@ -4,8 +4,8 @@
 ## _Доступ к БД:_
 - **InfluxDB 2.x URL:** ```sh http://185.234.114.212:8086/```
 - **org:** ```Kontrol Techniki```
-- **bucket:** ```sh t```
-- **measurement:** ```sh telemetry```
+- **bucket:** ```t```
+- **measurement:** ```telemetry```
 - **token:** ***```выдают отдельно. Не коммитить!```***
 
 ## _Создать .env из примера:_
