@@ -1,0 +1,37 @@
+.App {
+  text-align: left;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-start-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-end-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
+  
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  div[style*="grid-template-columns: 1fr 2fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+

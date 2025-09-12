@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: testovoe_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: testovoe_backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password123
+      DB_DATABASE: sensor_monitoring
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - timescaledb
+      - redis
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: testovoe_frontend
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_URL: http://localhost:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  timescale_data:
+  redis_data:
+
+networks:
+  app-network:
+    driver: bridge
+
+influxdb:
+  image: influxdb:2.7
+  container_name: tracker_influxdb
+  environment:
+    - DOCKER_INFLUXDB_INIT_MODE=setup
+    - DOCKER_INFLUXDB_INIT_USERNAME=admin
+    - DOCKER_INFLUXDB_INIT_PASSWORD=password
+    - DOCKER_INFLUXDB_INIT_ORG="Kontrol Techniki"
+    - DOCKER_INFLUXDB_INIT_BUCKET=t
+    - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=temp_token
+  ports:
+    - "8086:8086"
+  volumes:
+    - influxdb_data:/var/lib/influxdb2
+  networks:
+    - tracker-network
